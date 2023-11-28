@@ -1,2 +1,2 @@
 # Shopping_App
-## using only vanilla js
+using only vanilla js

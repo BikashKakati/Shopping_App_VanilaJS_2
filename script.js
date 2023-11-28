@@ -1,4 +1,4 @@
-// TODO: total price in the cart section;
+// TODO: buying completed feature;
 // FIX ME: when we want to remove cart product, if one prduct have more than one quantity, quantity not decrease, whole item removed.
 
 
@@ -8,6 +8,7 @@ const cartContainer = document.querySelector(".cart-container");
 const closeCartBtn = document.querySelector(".btn.close-cart");
 const cartInnerContainer = document.querySelector("#inner-cart-container");
 const cartPopUp = document.querySelector(".menu-item.cart .cart-popup");
+const cartTotalPrice = document.querySelector(".cart-container .cart-totalprice");
 
 const LOCAL_STORAGE_KEY = "CART_PRODUCTS";
 
@@ -55,7 +56,7 @@ function showingProductsData() {
         <div class="product-details">
             <p class="product title">${title}</p>
             <p class="product category">${category}</p>
-            <p class="product price">${price}</p>
+            <p class="product price">Price ₹${price}</p>
             <button class="btn add-cart" onclick="handleAddCart(${id})">Add To Cart</button>
         </div>
     </div>`)
@@ -100,6 +101,7 @@ function showCartProducts() {
 
     // no of product popup handler
     handleNoOfProductPopup(cartProductsData.length);
+    handleTotalPrice(cartProductsData);
 
     if (!cartProductsData.length) {
         cartInnerContainer.innerHTML = `<p id="empty-cart">Your Cart is Empty!</p>`;
@@ -115,7 +117,7 @@ function showCartProducts() {
                 alt="${title}">
         </div>
             <span class="product-title">${title}</span>
-            <span class="product-price">Price :${price}</span>
+            <span class="product-price">Price :₹${price}</span>
         </div>
         <button class="btn remove-cartproduct" onclick="handleRemoveCartProduct(${id})">Remove</button>
         <button class="btn buy-cartproduct">Buy Now</button>
@@ -173,4 +175,13 @@ function handleNoOfProductPopup(noOfProduct) {
     } else {
         cartPopUp.style.display = "none";
     }
+}
+
+function handleTotalPrice(cartProductsData) {
+    let allTotalPrice = 0;
+    for (let product of cartProductsData) {
+        let productTotalPrice = product.price * product.quantity;
+        allTotalPrice += productTotalPrice;
+    }
+    cartTotalPrice.innerText = `Total Price: ₹${allTotalPrice}`;
 }

@@ -10,7 +10,9 @@
     --soft-green: #03C988;
     --dark-green: #03945f;
     --white: #fff;
+    --dark-grey: #666;
     --grey: #dadada;
+    --soft-grey: #eee;
     --soft-blue: #2f68e2;
     --dark-blue: #0e33d4;
     --dark-red: #ff0808;
@@ -126,7 +128,7 @@ button {
 #menu .menu-item {
     font-size: 1.8rem;
     padding: 1rem 2rem;
-    color: #fff;
+    color: var(--white);
 }
 
 .menu-item:hover {
@@ -190,10 +192,11 @@ button {
 
 #inner-container .product-card .product-details .product.category {
     font-weight: 500;
+    color: var(--dark-grey);
 }
 
 #inner-container .product-card .product-details .product.price {
-    color: var(--dark-red);
+    color: var(--soft-red);
     font-weight: 900;
     font-size: 2rem;
 }
@@ -224,7 +227,7 @@ button {
     max-width: 35rem;
     width: 100%;
     z-index: 1;
-    background: #eee;
+    background: var(--soft-grey);
     transition: right ease-in-out .3s;
     overflow-y: scroll;
 }
@@ -234,12 +237,22 @@ button {
 }
 
 .cart-container .btn.close-cart {
+    font-size: 3rem;
+}
+
+.cart-container .cart-totalprice {
+    position: relative;
     font-size: 2rem;
+    margin-top: 1rem;
+    text-align: center;
+    font-weight: 800;
+    display: none;
 }
 
 #inner-cart-container {
     margin-top: 2rem;
     width: 100%;
+
 }
 
 #inner-cart-container .cart-product-box {
@@ -254,6 +267,7 @@ button {
 #inner-cart-container .cart-product-box .cart-products {
     width: 100%;
     display: flex;
+    flex-direction: column;
     align-items: center;
     gap: .8rem;
     margin-bottom: 1rem;
@@ -261,13 +275,12 @@ button {
 
 #empty-cart {
     font-size: 2rem;
-    color: #666;
+    color: var(--dark-grey);
     text-align: center;
 }
 
 #inner-cart-container .cart-product-box .cart-products .cart-product-img {
     margin-right: 1rem;
-    width: 6rem;
     height: 8rem;
 }
 
