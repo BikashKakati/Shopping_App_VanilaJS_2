@@ -12,68 +12,73 @@ const cartTotalPrice = document.querySelector(".cart-container .cart-totalprice"
 
 const LOCAL_STORAGE_KEY = "CART_PRODUCTS";
 
-// Api Url
-const url = "https://fakestoreapi.com/products";
 
 // After refresh It's showing data cart data
 showCartProducts();
 
-let productsData = null;
-
-// Api Call.
-fetchApi(url);
-
-async function fetchApi(url) {
-    // loader
-    loader();
-    try {
-        const res = await fetch(url);
-        const results = await res.json();
-        // storing product data
-        productsData = results;
-        showingProductsData();
-    } catch (err) {
-        console.log(err);
+// made the api calling a separate object to not pollute the data in global;
+const apiDataManager = {
+    productsData: null,
+    url: "https://fakestoreapi.com/products",
+    loader: function () {
+        productContainer.innerHTML =
+            `<div id="loader-container">
+                <div class="loader"></div>
+            </div>`;
+    },
+    fetchApi: async function () {
+        this.loader();
+        try {
+            const res = await fetch(this.url);
+            const results = await res.json();
+            // storing product data
+            this.productsData = results;
+        } catch (err) {
+            console.log(err);
+        }
     }
 }
-
-function loader() {
-    productContainer.innerHTML =
-        `<div id="loader-container">
-            <div class="loader"></div>
-        </div>`;
-}
+apiDataManager.fetchApi()
+    .then(function () {
+        return showingProductsData();
+    })
 
 // Home section product data
 function showingProductsData() {
-    console.log(productsData);
+    const { productsData } = apiDataManager
     productContainer.innerHTML = productsData.map((product) => {
-        const { id, title, image, category, price } = product;
-        return (`<div class="product-card">
+        const { id, title, image, category, price, rating: { rate: productRating } } = product;
+        // start rating
+        let wholeNum = Math.floor(productRating);
+        let str = '<i class="fa fa-star" aria-hidden="true"></i>'.repeat(wholeNum);
+        let deci = productRating % wholeNum;
+        if (deci) {
+            str += '<i class="fa fa-star-half"></i>';
+        }
+        let remain = deci ? 5 - (wholeNum + 1) : 5 - wholeNum;
+        str += '<i class="fa fa-star" aria-hidden="true" style="color:var(--grey)"></i>'.repeat(remain);
+
+        return (
+            `<div class="product-card">
         <div class="product-img">
             <img src="${image}" alt="${title}">
         </div>
         <div class="product-details">
-            <p class="product title">${title}</p>
+            <p class="product title">${title.slice(0, 50)}${title.length > 50 && "..."}</p>
             <p class="product category">${category}</p>
             <p class="product price">Price ₹${price}</p>
+            <div class ="star-rating">
+            ${str}
+            </div>
             <button class="btn add-cart" onclick="handleAddCart(${id})">Add To Cart</button>
         </div>
-    </div>`)
+    </div>`
+        )
     }).join("");
 
 }
-
-// cart container feature
-cart.addEventListener("click", () => {
-    cartContainer.classList.add("on");
-})
-closeCartBtn.addEventListener("click", () => {
-    cartContainer.classList.remove("on");
-})
-
-
 function handleAddCart(addCartProductId) {
+    const { productsData } = apiDataManager;
     for (let product of productsData) {
         if (product.id === addCartProductId) {
             handleLocalStorage(product);
@@ -84,6 +89,14 @@ function handleAddCart(addCartProductId) {
     showCartProducts();
 
 }
+
+// cart container feature
+cart.addEventListener("click", () => {
+    cartContainer.classList.add("on");
+})
+closeCartBtn.addEventListener("click", () => {
+    cartContainer.classList.remove("on");
+})
 
 function handleLocalStorage(addCartProduct) {
     // Grabbing cart data from local storage
@@ -183,5 +196,5 @@ function handleTotalPrice(cartProductsData) {
         let productTotalPrice = product.price * product.quantity;
         allTotalPrice += productTotalPrice;
     }
-    cartTotalPrice.innerText = `Total Price: ₹${allTotalPrice}`;
+    cartTotalPrice.innerText = `Total Price: ₹${allTotalPrice.toFixed(2)}`;
 }
