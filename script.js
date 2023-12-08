@@ -9,12 +9,17 @@ const closeCartBtn = document.querySelector(".btn.close-cart");
 const cartInnerContainer = document.querySelector("#inner-cart-container");
 const cartPopUp = document.querySelector(".menu-item.cart .cart-popup");
 const cartTotalPrice = document.querySelector(".cart-container .cart-totalprice");
+const themeChangeBtn = document.querySelector("#menu .dark-light-btn");
 
-const LOCAL_STORAGE_KEY = "CART_PRODUCTS";
+const LOCAL_STORAGE_KEY_ONE = "CART_PRODUCTS";
+const LOCAL_STORAGE_KEY_TWO = "THEME";
 
 
 // After refresh It's showing data cart data
 showCartProducts();
+themeData();
+
+
 
 // made the api calling a separate object to not pollute the data in global;
 const apiDataManager = {
@@ -105,7 +110,7 @@ function handleLocalStorage(addCartProduct) {
     // update with new product
     const updatedCartData = getUpdatedCartData(cartProductsData, addCartProduct);
 
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedCartData));
+    localStorage.setItem(LOCAL_STORAGE_KEY_ONE, JSON.stringify(updatedCartData));
 }
 
 // showing cart products
@@ -144,7 +149,7 @@ function showCartProducts() {
 }
 
 function gettingLocalStorageData() {
-    const localStorageData = localStorage.getItem(LOCAL_STORAGE_KEY);
+    const localStorageData = localStorage.getItem(LOCAL_STORAGE_KEY_ONE);
     const cartProducts = !localStorageData ? [] : JSON.parse(localStorageData);
     return cartProducts;
 }
@@ -152,7 +157,7 @@ function gettingLocalStorageData() {
 function handleRemoveCartProduct(productId) {
     const cartProductsData = gettingLocalStorageData();
     const updatedCartData = cartProductsData.filter((product) => product.id !== productId);
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedCartData));
+    localStorage.setItem(LOCAL_STORAGE_KEY_ONE, JSON.stringify(updatedCartData));
     showCartProducts();
 }
 function getUpdatedCartData(cartProductsData, addCartProduct) {
@@ -197,4 +202,29 @@ function handleTotalPrice(cartProductsData) {
         allTotalPrice += productTotalPrice;
     }
     cartTotalPrice.innerText = `Total Price: ₹${allTotalPrice.toFixed(2)}`;
+}
+
+// dark-light btn logic
+themeChangeBtn.addEventListener("click", changeTheme);
+
+function changeTheme() {
+    themeChangeBtn.classList.toggle("on");
+    document.querySelector("body").classList.toggle("dark-theme");
+
+    const themeData = gettingThemeData();
+    themeData.theme = themeData.theme === "dark" ? "light" : "dark";
+    localStorage.setItem(LOCAL_STORAGE_KEY_TWO, JSON.stringify(themeData));
+
+}
+function gettingThemeData() {
+    const localStorageData = localStorage.getItem(LOCAL_STORAGE_KEY_TWO);
+    const themeData = !localStorageData ? {} : JSON.parse(localStorageData);
+    return themeData;
+}
+function themeData() {
+    const themeData = gettingThemeData();
+    if (themeData.theme === "dark") {
+        themeChangeBtn.classList.toggle("on");
+        document.querySelector("body").classList.toggle("dark-theme");
+    }
 }
