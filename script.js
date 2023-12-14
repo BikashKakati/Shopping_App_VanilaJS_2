@@ -10,6 +10,11 @@ const cartInnerContainer = document.querySelector("#inner-cart-container");
 const cartPopUp = document.querySelector(".menu-item.cart .cart-popup");
 const cartTotalPrice = document.querySelector(".cart-container .cart-totalprice");
 const themeChangeBtn = document.querySelector("#menu .dark-light-btn");
+const productAddedPopup = document.querySelector(".added-product-popup");
+const slideContainer = document.querySelector("#caraousel-container .inner-container");
+const nextBtn = document.querySelector("#caraousel-container .btn.next");
+const prevBtn = document.querySelector("#caraousel-container .btn.prev");
+const slides = document.querySelectorAll("#caraousel-container .inner-container .slide");
 
 const LOCAL_STORAGE_KEY_ONE = "CART_PRODUCTS";
 const LOCAL_STORAGE_KEY_TWO = "THEME";
@@ -19,7 +24,35 @@ const LOCAL_STORAGE_KEY_TWO = "THEME";
 showCartProducts();
 themeData();
 
+// infinite caraousel algo
+let count = 1;
+slideContainer.style.transform = `translateX(-${count * 100}%)`;
+function slideNext() {
+    count++;
+    slideContainer.style.transition = "transform 0.5s ease-in-out";
+    slideContainer.style.transform = `translateX(-${count * 100}%)`;
+}
+function slidePrev() {
+    count--;
+    slideContainer.style.transition = "transform 0.5s ease-in-out";
+    slideContainer.style.transform = `translateX(-${count * 100}%)`;
+}
+slideContainer.addEventListener("transitionend", () => {
+    if (count === slides.length - 1) {
+        slideContainer.style.transition = "none";
+        count = 1;
+        slideContainer.style.transform = `translateX(-${count * 100}%)`;
+    }
+    if (count === 0) {
+        slideContainer.style.transition = "none";
+        count = slides.length - 2;
+        slideContainer.style.transform = `translateX(-${count * 100}%)`;
+    }
+})
+nextBtn.addEventListener("click", slideNext);
+prevBtn.addEventListener("click", slidePrev);
 
+// setInterval(slideNext, 2000);
 
 // made the api calling a separate object to not pollute the data in global;
 const apiDataManager = {
@@ -53,6 +86,7 @@ function showingProductsData() {
     const { productsData } = apiDataManager
     productContainer.innerHTML = productsData.map((product) => {
         const { id, title, image, category, price, rating: { rate: productRating } } = product;
+
         // start rating
         let wholeNum = Math.floor(productRating);
         let str = '<i class="fa fa-star" aria-hidden="true"></i>'.repeat(wholeNum);
@@ -90,6 +124,10 @@ function handleAddCart(addCartProductId) {
             break;
         }
     }
+    productAddedPopup.classList.add("on");
+    setTimeout(() => {
+        productAddedPopup.classList.remove("on");
+    }, 3000)
 
     showCartProducts();
 

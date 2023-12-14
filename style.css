@@ -8,7 +8,7 @@
 
 :root {
     --soft-green: #03C988;
-    --dark-green: #03945f;
+    --dark-green: #0c8055;
     --white: #fff;
     --black: #222;
     --dark-grey: #666;
@@ -185,6 +185,54 @@ button {
     padding-left: 2.7rem;
 }
 
+
+/* -----caraousel-container-------- */
+
+
+#caraousel-container {
+    width: 100%;
+    height: 30rem;
+    margin-bottom: 4rem;
+    position: relative;
+    overflow: hidden;
+}
+
+#caraousel-container .btn {
+    position: absolute;
+    padding: 3rem 1rem;
+    background: var(--soft-blue);
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+#caraousel-container .btn:hover {
+    background: var(--dark-blue);
+}
+
+#caraousel-container .btn.prev {
+    right: 0;
+}
+
+#caraousel-container .inner-container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+#caraousel-container .inner-container .slide {
+    min-width: 100%;
+}
+
+#caraousel-container .inner-container .slide img {
+    object-fit: cover;
+}
+
+
+/*---- cards container -------*/
+
+
+
 #products-container {
     position: relative;
     width: 100%;
@@ -273,6 +321,35 @@ button {
     display: block;
     margin: auto;
 }
+
+.added-product-popup {
+    position: fixed;
+    top: -9rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--soft-green);
+    width: 30rem;
+    height: 6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1rem;
+    transition: top .3s ease-in-out;
+}
+
+.added-product-popup.on {
+    top: 3rem;
+}
+
+.added-product-popup .product-popup-text {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--dark-green);
+}
+
+
+/* ------cart-container------- */
+
 
 .cart-container {
     padding: 1rem 2rem;
@@ -373,6 +450,7 @@ button {
     margin-top: 1rem;
 }
 
+/* ----------footer---------- */
 #footer {
     min-height: 20rem;
     margin-top: 4rem;
